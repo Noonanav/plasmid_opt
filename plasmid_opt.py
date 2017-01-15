@@ -72,29 +72,28 @@ with open('sequence_list.json') as data_file:
 with open('gene_list.json') as data_file:
 	gene_list = json.load(data_file)
 #
-pair_list = []
-id_num = [0, 1, 2, 3, 4]
+# pair_list = []
+# id_num = [0, 1, 2, 3, 4]
 
-for num in id_num:
-    seq_pair = [gene_list[num], sequence_list[num]]
-    pair_list.append(seq_pair)
+# for num in id_num:
+#     seq_pair = [gene_list[num], sequence_list[num]]
+#     pair_list.append(seq_pair)
 
-genome_dict = dict(zip(genome_IdList, pair_list))
-
+# genome_dict = dict(zip(genome_IdList, pair_list))
 # print(genome_dict[genome_IdList[0]][0])
 # print(len(genome_dict[genome_IdList[2]]))
 
 # 6 BP GENOME SEGMENTS
 gensixbp = []
 
-# full_gen = Seq("", generic_dna)
-# for sequence in sequence_list:
-#     full_gen += sequence
-#
-# print len(full_gen)
+full_gen = Seq("", generic_dna)
+for sequence in sequence_list:
+    full_gen += sequence
+    full_gen_str = str(full_gen)
 
-# sixbpgen = regex.findall(r'([a-zA-Z]{6})', full_seq_str, overlapped=True)
-# gensixbp.extend(sixbpgen)
+sixbpgen = regex.findall(r'([a-zA-Z]{6})', full_gen_str, overlapped=True)
+gensixbp.extend(sixbpgen)
+
 
 # print(genome_IdList)
 #
