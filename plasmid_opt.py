@@ -23,15 +23,20 @@ seq = plasmid.seq
 comseq = seq.complement()
 
 full_seq = seq + comseq
-full_seq_str = str(full_seq)
+full_seq_str = str(full_seq).upper()
 
 # 6 BP PLASMID SEGMENTS
-psixbp = []
 
-sixbpp = regex.findall(r'([a-zA-Z]{6})', full_seq_str, overlapped=True)
-psixbp.extend(sixbpp)
+substrings = {}
+seq_len = len(full_seq_str)
 
-# print psixbp
+for i in range(3,11):
+    if i not in substrings:
+        substrings[i] = []
+    for j in range(0,seq_len-i-1):
+        substrings[i].append(full_seq_str[j:j+i])
+
+
 
 # ESEARCH HOST GENOME IDLIST
 
@@ -83,7 +88,7 @@ with open('gene_list.json') as data_file:
 # print(genome_dict[genome_IdList[0]][0])
 # print(len(genome_dict[genome_IdList[2]]))
 
-# 6 BP GENOME SEGMENTS
+# X BP GENOME SEGMENTS
 gensixbp = []
 
 full_gen = Seq("", generic_dna)
@@ -91,9 +96,28 @@ for sequence in sequence_list:
     full_gen += sequence
     full_gen_str = str(full_gen)
 
-sixbpgen = regex.findall(r'([a-zA-Z]{6})', full_gen_str, overlapped=True)
-gensixbp.extend(sixbpgen)
+stop = False
+for i in range(3,11):
+    print "substrings of length " + str(i)
+    for ol in substrings[i]:
+        if ol not in full_gen_str:
+            stop = True
+            print ol
+    if stop:
+        break
 
+# i = 3
+#
+# for ol in substrings[i]:
+#     if ol not in full_gen_str:
+#         print ol
+#     else:
+#         i = i+1
+#
+# i = 9
+# for ol in substrings[i]:
+#     if ol not in full_gen_str:
+#         print ol
 
 # print(genome_IdList)
 #
