@@ -36,6 +36,7 @@ for i in range(3,11):
     for j in range(0,seq_len-i-1):
         substrings[i].append(full_seq_str[j:j+i])
 
+# LOCATE ORFs
 
 
 # ESEARCH HOST GENOME IDLIST
@@ -78,53 +79,40 @@ with open('gene_list.json') as data_file:
 	gene_list = json.load(data_file)
 #
 # pair_list = []
-# id_num = [0, 1, 2, 3, 4]
-
-# for num in id_num:
+#
+# for num in range(5):
 #     seq_pair = [gene_list[num], sequence_list[num]]
 #     pair_list.append(seq_pair)
-
+#
 # genome_dict = dict(zip(genome_IdList, pair_list))
-# print(genome_dict[genome_IdList[0]][0])
-# print(len(genome_dict[genome_IdList[2]]))
+# # print(genome_dict[genome_IdList[0]][1])
+# # print(len(genome_dict))
 
 # X BP GENOME SEGMENTS
-gensixbp = []
-
-full_gen = Seq("", generic_dna)
-for sequence in sequence_list:
-    full_gen += sequence
-    full_gen_str = str(full_gen)
-
-stop = False
-for i in range(3,11):
-    print "substrings of length " + str(i)
-    for ol in substrings[i]:
-        if ol not in full_gen_str:
-            stop = True
-            print ol
-    if stop:
-        break
-
-# i = 3
+# gen_bp_ol = []
 #
-# for ol in substrings[i]:
-#     if ol not in full_gen_str:
-#         print ol
-#     else:
-#         i = i+1
+# full_gen = Seq("", generic_dna)
+# for sequence in sequence_list:
+#     full_gen += sequence
+#     full_gen_str = str(full_gen)
 #
-# i = 9
-# for ol in substrings[i]:
-#     if ol not in full_gen_str:
-#         print ol
-
-# print(genome_IdList)
+# stop = False
+# for i in range(3,11):
+#     # print "substrings of length " + str(i)
+#     for ol in substrings[i]:
+#         if ol not in full_gen_str:
+#             stop = True
+#             gen_bp_ol.append(ol)
+#             # print ol
+#     if stop:
+#         break
 #
-# print(pair_list[0])
-# genome = Entrez.efetch(db="biosample", id="5831916", rettype="gb", retmode="text")
+# open('./gen_bp_overlap.json', 'w').write(json.dumps(gen_bp_ol))
 
-# print(genome.read())
+with open('gen_bp_overlap.json') as data_file:
+	gen_bp_ol = json.load(data_file)
+
+
 #
 # rseq = seq.reverse_complement()
 # # print seq.count("G")
