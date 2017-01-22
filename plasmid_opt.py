@@ -8,12 +8,14 @@ import re
 import regex
 import json
 from Bio import SeqIO
+from Bio import SearchIO
 from Bio import Entrez
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 from Bio.Alphabet import generic_dna
 from Bio.SeqUtils import GC
+from Bio.Blast import NCBIWWW
 
 # PLASMID INPUT
 for record in SeqIO.parse("pCYAko.fasta","fasta"):
@@ -83,7 +85,7 @@ for i in range(len(f3_codon) - 1):
     if orf >= 300:
         o = [f3_codon[i],orf]
         orf_list.append(o)
-        
+
 orfs = []
 for orf in orf_list:
     o = full_seq_str[orf[0].end() : (orf[0].end() + orf[1])]
@@ -116,7 +118,7 @@ for orf in orf_list:
 
 # EFETCH HOST GENOME SEQUENCES
 #
-sequence_list = []
+# sequence_list = []
 # gene_list = []
 #
 with open('genome_IdList.json') as data_file:
@@ -144,15 +146,15 @@ with open('sequence_list.json') as data_file:
 with open('gene_list.json') as data_file:
 	gene_list = json.load(data_file)
 #
-# pair_list = []
-#
-# for num in range(5):
-#     seq_pair = [gene_list[num], sequence_list[num]]
-#     pair_list.append(seq_pair)
-#
-# genome_dict = dict(zip(genome_IdList, pair_list))
-# # print(genome_dict[genome_IdList[0]][1])
-# # print(len(genome_dict))
+pair_list = []
+
+for num in range(5):
+    seq_pair = [gene_list[num], sequence_list[num]]
+    pair_list.append(seq_pair)
+
+genome_dict = dict(zip(genome_IdList, pair_list))
+# print(genome_dict[genome_IdList[0]][0])
+# print(len(genome_dict))
 
 # X BP GENOME SEGMENTS
 # gen_bp_ol = []
