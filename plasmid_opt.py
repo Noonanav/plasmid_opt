@@ -42,7 +42,6 @@ stop_codon = regex.finditer(r'(?!TGG)(T[AG][AG])', full_seq_str, overlapped=True
 for match in stop_codon:
     stop_codon_list.append(match)
 
-in_frame_stop = []
 frame1 = []
 frame2 = []
 frame3 = []
@@ -84,16 +83,20 @@ for i in range(len(f3_codon) - 1):
     if orf >= 300:
         o = [f3_codon[i],orf]
         orf_list.append(o)
+        
+orfs = []
+for orf in orf_list:
+    o = full_seq_str[orf[0].end() : (orf[0].end() + orf[1])]
+    o_seq = Seq(o)
+    orfs1 = [orf[0].end()+1, orf[1], o_seq, o_seq.translate(table=11)]
+    orfs.append(orfs1)
 
-for o in orf_list:
-    print o
-
-
+# in_frame_stop = []
 # for i in range(len(stop_codon_list) - 1):
 #     for j in range((len(full_seq_str) - stop_codon_list[i].start())/3):
 #         in_frame = stop_codon_list[i].start() + (3 * j)
 #         for stop in stop_codon_list:
-#             if stop.start() is in_frame:
+#             if stop.start() in in_frame:
 #                 in_frame_stop.append(stop)
 #                 # print in_frame_stop
 #                 for x in range(len(in_frame_stop) - 1):
