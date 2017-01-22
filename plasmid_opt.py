@@ -37,7 +37,70 @@ for i in range(3,11):
         substrings[i].append(full_seq_str[j:j+i])
 
 # LOCATE ORFs
+stop_codon_list = []
+stop_codon = regex.finditer(r'(?!TGG)(T[AG][AG])', full_seq_str, overlapped=True)
+for match in stop_codon:
+    stop_codon_list.append(match)
 
+in_frame_stop = []
+frame1 = []
+frame2 = []
+frame3 = []
+
+plasmid_range = range(len(full_seq_str) / 3)
+for p in plasmid_range:
+    frame1.append(0 + (p * 3))
+    frame2.append(1 + (p * 3))
+    frame3.append(2 + (p * 3))
+
+f1_codon = []
+f2_codon = []
+f3_codon = []
+
+for stop in stop_codon_list:
+    if stop.start() in frame1:
+        f1_codon.append(stop)
+    if stop.start() in frame2:
+        f2_codon.append(stop)
+    if stop.start() in frame3:
+        f3_codon.append(stop)
+
+orf_list = []
+
+for i in range(len(f1_codon) - 1):
+    orf = (f1_codon[i+1].start() - f1_codon[i].start())
+    if orf >= 300:
+        o = [f1_codon[i],orf]
+        orf_list.append(o)
+
+for i in range(len(f2_codon) - 1):
+    orf = (f2_codon[i+1].start() - f2_codon[i].start())
+    if orf >= 300:
+        o = [f2_codon[i],orf]
+        orf_list.append(o)
+
+for i in range(len(f3_codon) - 1):
+    orf = (f3_codon[i+1].start() - f3_codon[i].start())
+    if orf >= 300:
+        o = [f3_codon[i],orf]
+        orf_list.append(o)
+
+for o in orf_list:
+    print o
+
+
+# for i in range(len(stop_codon_list) - 1):
+#     for j in range((len(full_seq_str) - stop_codon_list[i].start())/3):
+#         in_frame = stop_codon_list[i].start() + (3 * j)
+#         for stop in stop_codon_list:
+#             if stop.start() is in_frame:
+#                 in_frame_stop.append(stop)
+#                 # print in_frame_stop
+#                 for x in range(len(in_frame_stop) - 1):
+#                     orf = (in_frame_stop[x+1].start() - in_frame_stop[x].start())
+#                     if orf >= 100:
+#                         print in_frame_stop[x]
+#                         print orf
 
 # ESEARCH HOST GENOME IDLIST
 
