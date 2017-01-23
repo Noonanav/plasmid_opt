@@ -7,10 +7,12 @@
 import re
 import regex
 import json
+import os
 from Bio import SeqIO
 from Bio import SearchIO
 from Bio import Entrez
 from Bio.Seq import Seq
+from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 from Bio.Alphabet import generic_dna
@@ -123,7 +125,25 @@ for orf in orf_list:
 #
 with open('genome_IdList.json') as data_file:
 	genome_IdList = json.load(data_file)
-#
+
+
+
+# GENEBANK FILES
+subdir = "genbank_dir"
+# try:
+#     os.mkdir(subdir)
+# except Exception:
+#     pass
+# #
+# for id in genome_IdList:
+#     filename = id
+#     if not os.path.isfile(filename):
+#         net_handle = Entrez.efetch(db="nucleotide", id=id, rettype="gbwithparts", retmode="text")
+#         out_handle = open(os.path.join(subdir, filename), "w")
+#         out_handle.write(net_handle.read())
+#         out_handle.close()
+#         net_handle.close()
+
 # for id in genome_IdList:
 #     nuc_fetch = Entrez.efetch(db="nucleotide", id=id, rettype="fasta", retmode="text")
 #     nucleotide_fetch = nuc_fetch.read()
@@ -137,15 +157,13 @@ with open('genome_IdList.json') as data_file:
 # open('./sequence_list.json', 'w').write(json.dumps(sequence_list))
 # open('./gene_list.json', 'w').write(json.dumps(gene_list))
 
-# print(gene_list[0])
-
 # DICTIONARY - GENOME_IDLIST : [GENE, NUCLEOTIDE]
 
 with open('sequence_list.json') as data_file:
 	sequence_list = json.load(data_file)
 with open('gene_list.json') as data_file:
 	gene_list = json.load(data_file)
-#
+
 pair_list = []
 
 for num in range(5):
@@ -153,6 +171,54 @@ for num in range(5):
     pair_list.append(seq_pair)
 
 genome_dict = dict(zip(genome_IdList, pair_list))
+
+# GENOME PARSING
+
+gene_dicts = []
+cds_list = []
+AA_seqs = []
+
+for id in genome_IdList:
+    for gene in SeqIO.parse(os.path.join(subdir, id), "genbank"):
+        genes = gene.features
+        for g in genes:
+            t = g.type
+            if 'CDS' in t:
+                cds_list.append(g)
+            else:
+                pass
+
+for cds in cds_list:
+    gene_dicts.append(cds.qualifiers)
+
+for trans in gene_dicts:
+    if 'translation' in trans:
+        AA_seqs.append(trans['translation'])
+    else:
+        pass
+
+print AA_seqs[300]
+
+            # if gene_dic['translation'] is True:
+            #     gene_dicts.append(gene_dic)
+            # else:
+            #     pass
+#             if g.type is 'CDS':
+#                 cds_list.append(g)
+#             else:
+#                 pass
+#
+
+        # #
+
+# for gen in gene_dicts:
+#     print gen
+
+        #     cds = g.extract(gene)
+        #     print cds
+
+
+
 # print(genome_dict[genome_IdList[0]][0])
 # print(len(genome_dict))
 
