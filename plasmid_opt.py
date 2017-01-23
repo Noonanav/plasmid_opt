@@ -199,26 +199,6 @@ for trans in gene_dicts:
 
 print AA_seqs[300]
 
-            # if gene_dic['translation'] is True:
-            #     gene_dicts.append(gene_dic)
-            # else:
-            #     pass
-#             if g.type is 'CDS':
-#                 cds_list.append(g)
-#             else:
-#                 pass
-#
-
-        # #
-
-# for gen in gene_dicts:
-#     print gen
-
-        #     cds = g.extract(gene)
-        #     print cds
-
-
-
 # print(genome_dict[genome_IdList[0]][0])
 # print(len(genome_dict))
 
