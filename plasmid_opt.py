@@ -95,20 +95,6 @@ for orf in orf_list:
     orfs1 = [orf[0].end()+1, orf[1], o_seq, o_seq.translate(table=11)]
     orfs.append(orfs1)
 
-# in_frame_stop = []
-# for i in range(len(stop_codon_list) - 1):
-#     for j in range((len(full_seq_str) - stop_codon_list[i].start())/3):
-#         in_frame = stop_codon_list[i].start() + (3 * j)
-#         for stop in stop_codon_list:
-#             if stop.start() in in_frame:
-#                 in_frame_stop.append(stop)
-#                 # print in_frame_stop
-#                 for x in range(len(in_frame_stop) - 1):
-#                     orf = (in_frame_stop[x+1].start() - in_frame_stop[x].start())
-#                     if orf >= 100:
-#                         print in_frame_stop[x]
-#                         print orf
-
 # ESEARCH HOST GENOME IDLIST
 
 # Entrez.email = "avery.noonan@mail.utoronto.ca"
@@ -191,16 +177,24 @@ for id in genome_IdList:
 for cds in cds_list:
     gene_dicts.append(cds.qualifiers)
 
+# print gene_dicts[50]
+# for trans in gene_dicts:
+#     if 'product' in trans:
+#         # print(trans['product'])
+#     else:
+#         pass
+
 for trans in gene_dicts:
     if 'translation' in trans:
         AA_seqs.append(trans['translation'])
     else:
         pass
 
-print AA_seqs[300]
 
-# print(genome_dict[genome_IdList[0]][0])
-# print(len(genome_dict))
+# BLAST GENOME
+
+# for aa in AA_seqs:
+#     blast_result = NCBIWWW.qblast("blastp", "nr", aa)
 
 # X BP GENOME SEGMENTS
 # gen_bp_ol = []
