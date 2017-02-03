@@ -23,4 +23,4 @@ with open('enz_list.json') as data_file:
 # #
 for i in enz_list:
     if 'NIES-39' in i[0]:
-        print i[3]
+        print i[2]
