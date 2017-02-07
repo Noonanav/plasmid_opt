@@ -132,7 +132,7 @@ for rm in rm_site:
 		nick_sites.append(rm)
 	if 'Homing' in rm[1]:
 		homing.append(rm)
-
+print re_sites
 re_loc = []
 meth_loc = []
 nick_loc = []
@@ -176,8 +176,19 @@ for orf in orfs:
 				h_o = [h, orf]
 				hom_orf.append(h_o)
 
-# for n in re_orf:
-# 	print n
+for n in re_orf:
+	x = (n[0][0])-(n[1][0])
+	for i in range(3):
+		if (x + i) % 3 == 0:
+			seq = n[1][2][(x-(3-i)):(x+15)]
+			aa = n[1][3][((x-(3-i))/3):((x-(3-i))/3)+5]
+			print seq
+			print aa
+
+	# if x % 3 == 0:
+	# 	print 'fuck ya'
+	# else:
+	# 	print 'fuck no'
 # for meth in meth_loc1:
 # 	print meth
 
