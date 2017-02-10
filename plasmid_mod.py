@@ -88,7 +88,7 @@ meth_sites = []
 re_sites = []
 nick_sites = []
 homing = []
-re_loc = []
+rm_loc = []
 
 
 for i in enz_list:
@@ -120,71 +120,62 @@ for i in target_enz:
 for t in target_site:
 	for i in target_enz:
 		if i[2] in str(t.re):
-			rm_hit = [i[1], i[3], t.group(0), t.span()]
+			rm_hit = [i[1], i[3], t.group(0), t.start(), t.end()]
 			rm_site.append(rm_hit)
 
 for rm in rm_site:
-	if 'methyltransferase' in rm[1]:
-		meth_sites.append(rm)
-	if 'restriction' in rm[1]:
-		re_sites.append(rm)
-	if 'Nicking' in rm[1]:
-		nick_sites.append(rm)
-	if 'Homing' in rm[1]:
-		homing.append(rm)
-print re_sites
-re_loc = []
-meth_loc = []
-nick_loc = []
-hom_loc = []
-
-for re in re_sites:
-	re_loc.append(re[3])
-re_loc1 = list(set(re_loc))
-for met in meth_sites:
-	meth_loc.append(met[3])
-meth_loc1 = list(set(meth_loc))
-for n in nick_sites:
-	nick_loc.append(n[3])
-nick_loc1 = list(set(nick_loc))
-for h in homing:
-	hom_loc.append(h[3])
-hom_loc1 = list(set(hom_loc))
+	rm_loc.append(rm[3])
+rm_loc1 = list(set(rm_loc))
 
 # RM SITE IN ORF
-re_orf = []
-meth_orf = []
-nick_orf = []
-hom_orf = []
+rm_orf = []
+rm_nonc = []
+orf_ranges = []
+
 
 for orf in orfs:
 	for i in range((orf[0]-1), (orf[0]-1)+orf[1]):
-		for re in re_loc1:
-			if re[0] == i:
-				re_o = [re, orf]
-				re_orf.append(re_o)
-		for meth in meth_loc1:
-			if meth[0] == i:
-				meth_o = [meth, orf]
-				meth_orf.append(meth_o)
-		for nick in nick_loc1:
-			if nick[0] == i:
-				n_o = [nick, orf]
-				nick_orf.append(n_o)
-		for h in hom_loc1:
-			if h[0] == i:
-				h_o = [h, orf]
-				hom_orf.append(h_o)
+		orf_ranges.append(i)
+		for rm in rm_loc1:
+			if rm == i:
+				rm_o = [rm, orf]
+				rm_orf.append(rm_o)
 
-for n in re_orf:
-	x = (n[0][0])-(n[1][0])
+# RM SITE IN NON-CODING PLASMID
+orf_bp = list(set(orf_ranges))
+non_coding = list(range(len(full_seq_str) - 1))
+for x in orf_bp:
+	non_coding.remove(x)
+for nc in non_coding:
+	for rm in rm_loc1:
+		print rm
+		if rm == nc:
+			rm_nonc.append(rm)
+print rm_nonc
+print rm_orf
+print len(rm_orf)
+print len(rm_nonc)
+print type(non_coding)
+
+# IN-FRAME RM SEQUENCE/LOCATION
+site = []
+for n in rm_orf:
+	x = (n[0])-(n[1][0])
 	for i in range(3):
 		if (x + i) % 3 == 0:
-			seq = n[1][2][(x-(3-i)):(x+15)]
+			seq = n[1][2][(x-(3-i)):((x-(3-i))+15)]
 			aa = n[1][3][((x-(3-i))/3):((x-(3-i))/3)+5]
-			print seq
-			print aa
-
+			for rm in rm_site:
+				if n[0] == rm[3]:
+					site1 = [rm[0], rm[1], rm[2], seq, n[0]-(3-i)]
+					site.append(site1)
+			# print seq.translate()
+			# print aa
+# print site
+# for s in site:
+# 	print [s[0], s[2], s[3].translate(), s[4]]
+# 	print s[3].complement()
+# 	print (s[4]-len(plasmid))
 	# if x % 3 == 0:
 	# 	print 'fuck ya'
 	# else:
