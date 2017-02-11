@@ -9,6 +9,10 @@ from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 from Bio.Alphabet import generic_dna
 
+from reportlab.lib import colors
+from reportlab.lib.units import cm
+from Bio.Graphics import GenomeDiagram
+
 with open('enz_list.json') as data_file:
 	enz_list = json.load(data_file)
 
@@ -76,6 +80,14 @@ for orf in orf_list:
     o_seq = Seq(o)
     orfs1 = [orf[0].end()+1, orf[1], o_seq, o_seq.translate(table=11)]
     orfs.append(orfs1)
+
+# SeqFeature FROM ORF
+orf_features = []
+for orf in orfs:
+	orf_feature = SeqFeature(FeatureLocation(orf[0], orf[0] + orf[1]), type='ORF')
+	orf_features.append(orf_feature)
+
+plasmid.features = orf_features
 
 # TARGET CODE CHANGE
 
@@ -148,14 +160,13 @@ for x in orf_bp:
 	non_coding.remove(x)
 for nc in non_coding:
 	for rm in rm_loc1:
-		print rm
 		if rm == nc:
 			rm_nonc.append(rm)
-print rm_nonc
-print rm_orf
-print len(rm_orf)
-print len(rm_nonc)
-print type(non_coding)
+# print rm_nonc
+# print rm_orf
+# print len(rm_orf)
+# print len(rm_nonc)
+# print type(non_coding)
 
 # IN-FRAME RM SEQUENCE/LOCATION
 site = []
