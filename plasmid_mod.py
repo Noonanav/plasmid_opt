@@ -182,20 +182,52 @@ for n in rm_orf:
 					site.append(site1)
 
 # SEQUENCE MODIFICATION
+loc = []
 ran_ins = []
 mod_inserts = []
+
+# for s in site:
+# 	if s[4] not in loc:
+# 		random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
+# 		random_ins = str(s[3]).replace(s[2], random_seq)
+# 		while Seq(random_ins).translate() != s[3].translate():
+# 			random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
+# 			random_ins = str(s[3]).replace(s[2], random_seq)
+# 		else:
+# 			mod_insert = [random_ins, s[3], s[2], s[4]]
+# 			mod_inserts.append(mod_insert)
+# 			loc.append(s[4])
+
 for s in site:
-	random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
-	random_ins = str(s[3]).replace(s[2], random_seq)
-	if Seq(random_ins).translate() == s[3].translate():
-		mod_insert = [random_ins, s[3], s[2], s[4]]
-		mod_inserts.append(mod_insert)
-	# else:
-for mod in mod_inserts:
-	print mod[0]
-	print mod[1]
-	print Seq(mod[0]).translate()
-	print mod[1].translate()
+	if s[4] not in loc:
+		random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
+		random_ins = str(s[3]).replace(s[2], random_seq)
+		for i in target_enz:
+			x = regex.finditer(i[2], random_ins, overlapped=True)
+			break
+		while Seq(random_ins).translate() != s[3].translate() and x != None:
+			random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
+			random_ins = str(s[3]).replace(s[2], random_seq)
+		else:
+			mod_insert = [random_ins, s[3], s[2], s[4]]
+			mod_inserts.append(mod_insert)
+			loc.append(s[4])
+
+# for i in target_enz:
+# 	cut_site = regex.finditer((i[2] for i in target_enz), full_seq_str, overlapped=True)
+#
+# for i in target_enz:
+# 	if regex.finditer((i[2] for i in target_enz), random_ins, overlapped=True) is not None:
+
+# for mod in mod_inserts:
+# 	print mod[0]
+# 	print mod[1]
+# 	print Seq(mod[0]).translate()
+# 	print mod[1].translate()
+# print len(site)
+print len(mod_inserts)
+# print len(rm_site)
+# print len(rm_loc1)
 
 
 	# ran_ins.append(random_ins)
