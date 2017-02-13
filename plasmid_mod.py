@@ -103,6 +103,7 @@ re_sites = []
 nick_sites = []
 homing = []
 rm_loc = []
+target_list = []
 
 
 for i in enz_list:
@@ -122,9 +123,11 @@ for i in init_site:
 	i[2] = i[2].replace('H', '[ACT]')
 	i[2] = i[2].replace('V', '[ACG]')
 	i[2] = i[2].replace('N', '[ACGT]')
+	i[2] = i[2].replace('(-11/-8)', '')
 	i[2] = i[2].replace('^', '')
 	i[2] = i[2].replace('\r', '')
 	target_enz.append(i)
+	target_list.append(i[2])
 
 for i in target_enz:
 	cut_site = regex.finditer(i[2], full_seq_str, overlapped=True)
@@ -177,7 +180,7 @@ for n in rm_orf:
 			aa = n[1][3][((x-(3-i))/3):((x-(3-i))/3)+5]
 			for rm in rm_site:
 				if n[0] == rm[3]:
-					site1 = [rm[0], rm[1], rm[2], seq, n[0]-(3-i)]
+					site1 = [rm[0], rm[1], rm[2], seq, n[0]-(3-i), 3-i]
 					# site1 = [Enzyme name, Enzyme type, Recognition bp, In-frame bp, In-frame target loc]
 					site.append(site1)
 
@@ -186,86 +189,60 @@ loc = []
 ran_ins = []
 mod_inserts = []
 
-# for s in site:
-# 	if s[4] not in loc:
-# 		random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
-# 		random_ins = str(s[3]).replace(s[2], random_seq)
-# 		while Seq(random_ins).translate() != s[3].translate():
-# 			random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
-# 			random_ins = str(s[3]).replace(s[2], random_seq)
-# 		else:
-# 			mod_insert = [random_ins, s[3], s[2], s[4]]
-# 			mod_inserts.append(mod_insert)
-# 			loc.append(s[4])
 
 for s in site:
 	if s[4] not in loc:
 		random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
 		random_ins = str(s[3]).replace(s[2], random_seq)
-		for i in target_enz:
-			x = regex.finditer(i[2], random_ins, overlapped=True)
-			break
-		while Seq(random_ins).translate() != s[3].translate() and x != None:
+		x = regex.search("(" + ")|(".join(target_list) + ")", random_ins, overlapped=True)
+		ins_perm = []
+		while Seq(random_ins).translate() != s[3].translate() or x != None:
 			random_seq = ''.join(random.SystemRandom().choice('ACTG') for _ in range(len(s[2])))
+			ins_perm.append(random_seq)
 			random_ins = str(s[3]).replace(s[2], random_seq)
+			x = regex.search("(" + ")|(".join(target_list) + ")", random_ins, overlapped=True)
+			if len(list(set(ins_perm))) == 4**len(s[2]):
+				mod_insert = [s[3], s[3], s[2], s[4]]
+				mod_inserts.append(mod_insert)
+				loc.append(s[4])
+				break
 		else:
 			mod_insert = [random_ins, s[3], s[2], s[4]]
 			mod_inserts.append(mod_insert)
 			loc.append(s[4])
 
-# for i in target_enz:
-# 	cut_site = regex.finditer((i[2] for i in target_enz), full_seq_str, overlapped=True)
+# # print full_seq_str
+no_c = []
+print len(mod_inserts)
+for mod in mod_inserts:
+# 	print mod[0]
+# 	print mod[1]
+	if mod[0] == str(mod[1]):
+		no_c.append(mod)
+# 		print mod[0]
+# 		print mod[1]
+# 		print ''
+print len(no_c)
+for c in no_c:
+	print c[3]
+
+# # 	full_seq_str.replace(full_seq_str[mod[3]:mod[3]+len(mod[0])], ' FUCK YOU ')
 #
-# for i in target_enz:
-# 	if regex.finditer((i[2] for i in target_enz), random_ins, overlapped=True) is not None:
+# print full_seq_str
+
+# print "(" + ")|(".join(target_list) + ")"
+
 
 # for mod in mod_inserts:
 # 	print mod[0]
 # 	print mod[1]
+# 	print ''
 # 	print Seq(mod[0]).translate()
 # 	print mod[1].translate()
 # print len(site)
-print len(mod_inserts)
+# print len(mod_inserts)
 # print len(rm_site)
 # print len(rm_loc1)
-
-
-	# ran_ins.append(random_ins)
-# print ran_ins[1]
-# print site[1]
-# j = ''.join(random.SystemRandom().choice('ACTG') for _ in range(4))
-# print j
-			# print seq.translate()
-			# print a
-
-# print site[0]
-# print rm_orf[0]
-# print rm_site[0]
-# for s in site:
-# 	print [s[0], s[2], s[3].translate(), s[4]]
-# 	print s[3].complement()
-# 	print (s[4]-len(plasmid))
-	# if x % 3 == 0:
-	# 	print 'fuck ya'
-	# else:
-	# 	print 'fuck no'
-
-# SEQUENCE MODIFICATION
-# for rm in rm_site:
-# 	full_seq_str = full_seq_str.replace(full_seq_str[rm[3]:rm[4]], 'FUCKYA')
-# 	# print rm[0]
-# 	# print full_seq_str[rm[3]:rm[0][4]]
-# 	# print rm[0][3]
-# 	# print rm[0][4]
-# 	# print full_seq_str[rm[4]:rm[5]]
-# 	# full_seq_str = full_seq_str.replace(full_seq_str[rm[0][3]:rm[0][4]], 'FUCKYA', maxreplace)
-# # print rm[0]
-# # print full_seq_str[rm[0][3]:rm[0][4]]
-# # print full_seq_str[rm_site[0][3]:rm_site[0][4]]
-# # full_seq_str = full_seq_str.replace(full_seq_str[rm_site[0][3]:rm_site[0][4]], 'FUCKYA')
-#
-# # print rm_site[0][4]
-# print full_seq_str
 
 # PLASMID DIAGRAM
 # gd_diagram = GenomeDiagram.Diagram("pCYAko")
