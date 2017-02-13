@@ -115,6 +115,7 @@ for i in enz_list:
         		init_site.append(i)
 
 for i in init_site:
+	print i[2]
 	i[2] = i[2].replace('R', '[GA]')
 	i[2] = i[2].replace('Y', '[CT]')
 	i[2] = i[2].replace('M', '[AC]')
@@ -126,7 +127,6 @@ for i in init_site:
 	i[2] = i[2].replace('H', '[ACT]')
 	i[2] = i[2].replace('V', '[ACG]')
 	i[2] = i[2].replace('N', '[ACGT]')
-	i[2] = i[2].replace('(-11/-8)', '')
 	i[2] = i[2].replace('^', '')
 	i[2] = i[2].replace('\r', '')
 	target_enz.append(i)
@@ -221,8 +221,9 @@ for mod in mod_inserts:
 
 # alignment = pairwise2.align.globalxx(Seq(unmod_seq), Seq(full_seq_str))
 # print(pairwise2.format_alignment(*alignment[0]))
-
-
+# print len(mod_inserts)
+# print unmod_seq
+# print full_seq_str
 # PLASMID DIAGRAM
 # gd_diagram = GenomeDiagram.Diagram("pCYAko")
 # gd_track_for_features = gd_diagram.new_track(1, name="ORFs")
