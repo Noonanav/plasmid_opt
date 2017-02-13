@@ -6,10 +6,13 @@ from Bio import SeqIO
 from Bio import SearchIO
 from Bio import Entrez
 from Bio.Seq import Seq
+from Bio import pairwise2
 from Bio.SeqFeature import SeqFeature, FeatureLocation
 from Bio.SeqRecord import SeqRecord
 from Bio.Alphabet import IUPAC
 from Bio.Alphabet import generic_dna
+from Bio.Align import MultipleSeqAlignment
+
 
 from reportlab.lib import colors
 from reportlab.lib.units import cm
@@ -202,7 +205,7 @@ for s in site:
 			random_ins = str(s[3]).replace(s[2], random_seq)
 			x = regex.search("(" + ")|(".join(target_list) + ")", random_ins, overlapped=True)
 			if len(list(set(ins_perm))) == 4**len(s[2]):
-				mod_insert = [s[3], s[3], s[2], s[4]]
+				mod_insert = [str(s[3]), s[3], s[2], s[4]]
 				mod_inserts.append(mod_insert)
 				loc.append(s[4])
 				break
@@ -211,38 +214,14 @@ for s in site:
 			mod_inserts.append(mod_insert)
 			loc.append(s[4])
 
-# # print full_seq_str
-no_c = []
-print len(mod_inserts)
+unmod_seq = full_seq_str
+
 for mod in mod_inserts:
-# 	print mod[0]
-# 	print mod[1]
-	if mod[0] == str(mod[1]):
-		no_c.append(mod)
-# 		print mod[0]
-# 		print mod[1]
-# 		print ''
-print len(no_c)
-for c in no_c:
-	print c[3]
+	full_seq_str = full_seq_str.replace(full_seq_str[mod[3]-1:mod[3]+len(mod[0])-1], mod[0])
 
-# # 	full_seq_str.replace(full_seq_str[mod[3]:mod[3]+len(mod[0])], ' FUCK YOU ')
-#
-# print full_seq_str
+# alignment = pairwise2.align.globalxx(Seq(unmod_seq), Seq(full_seq_str))
+# print(pairwise2.format_alignment(*alignment[0]))
 
-# print "(" + ")|(".join(target_list) + ")"
-
-
-# for mod in mod_inserts:
-# 	print mod[0]
-# 	print mod[1]
-# 	print ''
-# 	print Seq(mod[0]).translate()
-# 	print mod[1].translate()
-# print len(site)
-# print len(mod_inserts)
-# print len(rm_site)
-# print len(rm_loc1)
 
 # PLASMID DIAGRAM
 # gd_diagram = GenomeDiagram.Diagram("pCYAko")
